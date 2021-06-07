@@ -5,7 +5,7 @@ function randomNumber(min, max) {
   if(min < 0) {
     min = 0;
   }
-  return console.log(Math.floor(Math.random() * (max - min + 1)) + min);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 function randomNumberFloat(min, max, quantity) {
