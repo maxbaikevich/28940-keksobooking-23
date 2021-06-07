@@ -1,5 +1,5 @@
 function randomNumber(min, max) {
-  if(max < 0 || min === max) {
+  if(max < 0 || min >= max) {
     return;
   }
   if(min < 0 ) {
@@ -9,7 +9,7 @@ function randomNumber(min, max) {
 }
 
 function randomNumberFloat(min, max, quantity) {
-  if(max < 0 || min === max) {
+  if(max < 0 || min >= max) {
     return;
   }
   if(min < 0) {
