@@ -11,7 +11,7 @@ const FEATURES = [
   'elevator',
   'conditioner',
 ];
-const TITLEFLAT = 'Квартира';
+const TITLEFLAT = 'квартира';
 const TITLECITY = 'Токио';
 const TITLEDESCRIPTION = [
   'Грязная',
@@ -65,7 +65,7 @@ function randomNumberFloat(min, max, quantity) {
 }
 
 function avatarFormat(num) {
-  return num < 10 ? `img/avatars/user'0' ${num}.png` : `img/avatars/user${num}.png`;
+  return num < 10 ? `img/avatars/user0${num}.png` : `img/avatars/user${num}.png`;
 }
 
 function getRandomArrayElement(elements) {
@@ -93,7 +93,7 @@ function getOrder(num) {
       lng: parseFloat(randomNumberFloat(139.70000, 139.80000, 5)),
     },
     offer:{
-      title: `${getRandomArrayElement(TITLEDESCRIPTION)} ${TITLEFLAT} ${getRandomArrayElement(TITLELOCATION)} ${TITLECITY}`,
+      title: `${getRandomArrayElement(TITLEDESCRIPTION)} ${TITLEFLAT}. ${getRandomArrayElement(TITLELOCATION)} ${TITLECITY}`,
       address:`${String(randomNumberFloat(35.65000, 35.70000, 5))}, ${String(randomNumberFloat(35.65000, 35.70000, 5))}`,
       price: randomNumber(1000, 100000),
       type: getRandomArrayElement(TYPE),
