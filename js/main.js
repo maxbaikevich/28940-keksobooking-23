@@ -64,7 +64,7 @@ function randomNumberFloat(min, max, quantity) {
   return number.toFixed(quantity);
 }
 
-function avatarFormat(num) {
+function getAvatarFoto(num) {
   return num < 10 ? `img/avatars/user0${num}.png` : `img/avatars/user${num}.png`;
 }
 
@@ -86,7 +86,7 @@ function getRandomArr(type) {
 function getOrder(num) {
   return {
     author:{
-      avatar:avatarFormat(num),
+      avatar:getAvatarFoto(num),
     },
     location:{
       lat: parseFloat(randomNumberFloat(35.65000, 35.70000, 5)),
@@ -108,13 +108,13 @@ function getOrder(num) {
   };
 }
 
-function genirationOrder() {
-  const order = [];
+function genirationOrders() {
+  const orders = [];
   for(let index = 1; index <= 10; index++) {
     const element = getOrder(index);
-    order.push(element);
+    orders.push(element);
   }
-  return order;
+  return orders;
 }
 
-genirationOrder();
+genirationOrders();
