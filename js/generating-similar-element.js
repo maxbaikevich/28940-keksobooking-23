@@ -4,25 +4,28 @@ const similarCard = genirationOrders(1);
 const cardTemplate = document.querySelector('#card').content.querySelector('.popup');
 function similarCardPhoto(similarCardElement, img) {
   const element = similarCardElement.querySelector('.popup__photos');
-  if(img.length) {
-    element.querySelector('img').remove();
-    img.forEach((photos)=>{
-      const photoList = `<img src="${photos}" class="popup__photo" width="45" height="40" alt="Фотография жилья"></img>`;
-      element.innerHTML += photoList;
-    });
-  }else {
+  if(!img.length) {
     element.querySelector('.popup__photos').remove;
+    return;
   }
+  element.querySelector('img').remove();
+  img.forEach((photos)=>{
+    const photoList = `<img src="${photos}" class="popup__photo" width="45" height="40" alt="Фотография жилья"></img>`;
+    element.innerHTML += photoList;
+  });
 }
 function displayFeatures(modifaer, similarCardElement) {
+  const featuresContainer = similarCardElement.querySelector('.popup__features');
   const modifaers = modifaer.map((features)=> `popup__feature--${features}`);
-  similarCardElement.querySelectorAll('.popup__feature')
-    .forEach((item)=> {
-      const modfier = item.classList[1];
-      if(!modifaers.includes(modfier)) {
-        item.remove();
-      }
-    });
+  const featuresElements = similarCardElement.querySelectorAll('.popup__feature');
+  const fragment = document.createDocumentFragment();
+  featuresElements.forEach((item)=>item.remove());
+  modifaers.forEach((el)=> {
+    const featureElement = document.createElement('li');
+    featureElement.classList.add('popup__feature',`${el}`);
+    fragment.appendChild(featureElement);
+  });
+  featuresContainer.appendChild(fragment);
 }
 similarCard.forEach((el)=> {
   switch (el.offer.type) {

@@ -7,7 +7,7 @@ const FEATURES = [
   'wifi',
   'dishwasher',
   'parking',
-  ' washer',
+  'washer',
   'elevator',
   'conditioner',
 ];
