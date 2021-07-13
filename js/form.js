@@ -4,13 +4,18 @@ const fieldRoomNumber = form.querySelector('#room_number');
 const fieldCapacity = form.querySelector('#capacity');
 const fieldsetHeader = form.querySelector('.ad-form-header');
 const fieldPrice = form.querySelector('#price');
+const typeLodging = form.querySelector('#type');
 const mapFiltersBlock = document.querySelector('.map__filters');
 const mapFeatures = mapFiltersBlock.querySelector('.map__features');
 const mapFilterElement = mapFiltersBlock.querySelectorAll('.map__filter');
-const MAX_PRICE = 1000000;
-let fieldCapacitySelecyed = Number(fieldRoomNumber.value);
-let capacityNumber = Number(fieldCapacity.value);
+const MIN_PRICE_NIGHT_FLAT = 1000;
+const MIN_PRICE_NIGHT_HOTEL = 3000;
+const MIN_PRICE_NIGHT_HOUSE = 5000;
+const MIN_PRICE_NIGHT_PALACE = 10000;
+const MIN_PRICE_NIGHT_BUNGALOW = 0;
+const MIN_PRICE_NIGHT = 'Минимальная цена за ночь';
 let valuePrice = Number(fieldPrice.value);
+
 function toggledAttrebuteDisabled(element) {
   if(element.hasAttribute('disabled')) {
     element.removeAttribute('disabled');
@@ -18,6 +23,7 @@ function toggledAttrebuteDisabled(element) {
     element.setAttribute('disabled', 'disabled');
   }
 }
+
 function disabledForm() {
   form.classList.add('ad-form--disabled');
   mapFiltersBlock.classList.add('ad-form--disabled');
@@ -26,6 +32,7 @@ function disabledForm() {
   toggledAttrebuteDisabled(fieldsetHeader);
   toggledAttrebuteDisabled(mapFeatures);
 }
+
 function activateForm() {
   form.classList.remove('ad-form--disabled');
   mapFiltersBlock.classList.remove('ad-form--disabled');
@@ -34,27 +41,100 @@ function activateForm() {
   toggledAttrebuteDisabled(fieldsetHeader);
   toggledAttrebuteDisabled(mapFeatures);
 }
+
+function disabledAllOptionsRoom() {
+  const optionsRooms = Array.from(fieldCapacity.options);
+  optionsRooms.forEach((el)=> {
+    el.disabled = true;
+  });
+}
+
+function vlidityFieldPrice(el) {
+  let selectedLodging = {};
+  if(el.selected === true) {
+    selectedLodging = el;
+    if(selectedLodging.value ==='flat' && valuePrice < MIN_PRICE_NIGHT_FLAT){
+      fieldPrice.setCustomValidity(`${MIN_PRICE_NIGHT} ${MIN_PRICE_NIGHT_FLAT}`);
+    }else if(selectedLodging.value ==='hotel' && valuePrice < MIN_PRICE_NIGHT_HOTEL) {
+      fieldPrice.setCustomValidity(`${MIN_PRICE_NIGHT} ${MIN_PRICE_NIGHT_HOTEL}`);
+    }else if(selectedLodging.value ==='house' && valuePrice < MIN_PRICE_NIGHT_HOUSE) {
+      fieldPrice.setCustomValidity(`${MIN_PRICE_NIGHT} ${MIN_PRICE_NIGHT_HOUSE}`);
+    }else if(selectedLodging.value ==='palace' && valuePrice < MIN_PRICE_NIGHT_PALACE) {
+      fieldPrice.setCustomValidity(`${MIN_PRICE_NIGHT} ${MIN_PRICE_NIGHT_PALACE}`);
+    }else if(selectedLodging.value==='bungalow' && valuePrice > MIN_PRICE_NIGHT_BUNGALOW) {
+      fieldPrice.setCustomValidity(`${MIN_PRICE_NIGHT} ${MIN_PRICE_NIGHT_BUNGALOW}`);
+    }else {
+      fieldPrice.setCustomValidity('');
+    }
+  }
+}
+
+function priceСhangePlaceholder() {
+  const typeLodgingOptions = Array.from(typeLodging.options);
+  typeLodgingOptions.forEach((el)=> {
+    if( el.selected && el.value === 'flat') {
+      fieldPrice.placeholder = MIN_PRICE_NIGHT_FLAT;
+    }else if(el.selected && el.value === 'hotel') {
+      fieldPrice.placeholder = MIN_PRICE_NIGHT_HOTEL;
+    }else if(el.selected && el.value === 'house') {
+      fieldPrice.placeholder = MIN_PRICE_NIGHT_HOUSE;
+    }else if(el.selected && el.value === 'palace') {
+      fieldPrice.placeholder = MIN_PRICE_NIGHT_PALACE;
+    }else if(el.selected && el.value === 'bungalow') {
+      fieldPrice.placeholder = MIN_PRICE_NIGHT_BUNGALOW;
+    }
+  });
+}
+
+function comparCapacity(el, option) {
+  if(option === 100 && Number(el.value) === 0) {
+    el.disabled = false;
+    el.selected = true;
+  }else if(option === 1 && Number(el.value) === 1) {
+    el.disabled = false;
+    el.selected = true;
+  }else if(option === 2 && Number(el.value) >= 1 && Number(el.value) < 3) {
+    el.disabled = false;
+    el.selected = true;
+  }else if(option === 3 && Number(el.value) >= 1){
+    el.disabled = false;
+    el.selected = true;
+  }
+}
+
+function iniOptionsGroupRoomSelected() {
+  const roomArr = Array.from(fieldRoomNumber.options);
+  const capacityArr = Array.from(fieldCapacity.options);
+  roomArr.forEach((el)=> {
+    capacityArr.forEach((item)=> {
+      if(el.selected && (( Number(el.value) === Number(item.value))|| (Number(el.value) === 100 && Number(item.value) === 0))) {
+        item.disabled = false;
+        item.selected = true;
+      }
+    });
+  });
+}
+
+typeLodging.addEventListener('input', ()=> {
+  priceСhangePlaceholder();
+  fieldPrice.value = '';
+});
+
 fieldPrice.addEventListener('input', ()=> {
   valuePrice = Number(fieldPrice.value);
-  if(valuePrice > MAX_PRICE) {
-    fieldPrice.setCustomValidity(`Максимальная цена ${MAX_PRICE}`);
-  }else {
-    fieldPrice.setCustomValidity('');
-  }
+  const typeLodgingOptions = Array.from(typeLodging.options);
+  typeLodgingOptions.forEach((el)=>{
+    vlidityFieldPrice(el);
+  });
 });
+
 fieldRoomNumber.addEventListener('input',() => {
-  fieldCapacitySelecyed = Number(fieldRoomNumber.value);
+  const fieldCapacitySelecyed = Number(fieldRoomNumber.value);
+  disabledAllOptionsRoom();
+  const optionsRooms = Array.from(fieldCapacity.options);
+  optionsRooms.forEach((el)=> {
+    comparCapacity(el, fieldCapacitySelecyed);
+  });
 });
-fieldCapacity.addEventListener('input',()=>{
-  capacityNumber = Number(fieldCapacity.value);
-  if(fieldCapacitySelecyed === 1 && capacityNumber !== 1) {
-    fieldCapacity.setCustomValidity('Одна комната один гость!');
-  }else if(fieldCapacitySelecyed === 2 && capacityNumber > 2) {
-    fieldCapacity.setCustomValidity('Не более двух гостей');
-  }else if(fieldCapacitySelecyed === 100 && capacityNumber > 0) {
-    fieldCapacity.setCustomValidity('Не для гостей!');
-  }else {
-    fieldCapacity.setCustomValidity('');
-  }
-});
-export {disabledForm, activateForm};
+
+export {disabledForm, activateForm, disabledAllOptionsRoom, iniOptionsGroupRoomSelected, priceСhangePlaceholder};
