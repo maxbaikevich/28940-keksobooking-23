@@ -5,6 +5,8 @@ const fieldCapacity = form.querySelector('#capacity');
 const fieldsetHeader = form.querySelector('.ad-form-header');
 const fieldPrice = form.querySelector('#price');
 const typeLodging = form.querySelector('#type');
+const selectTimein = form.querySelector('#timein');
+const selectTimeout = form.querySelector('#timeout');
 const mapFiltersBlock = document.querySelector('.map__filters');
 const mapFeatures = mapFiltersBlock.querySelector('.map__features');
 const mapFilterElement = mapFiltersBlock.querySelectorAll('.map__filter');
@@ -115,6 +117,18 @@ function iniOptionsGroupRoomSelected() {
   });
 }
 
+function synchronousTime(verifiable, emit) {
+  const optVerifiable = Array.from(verifiable.options);
+  const optEmit =  Array.from(emit.options);
+  optEmit.forEach((el)=> {
+    optVerifiable.forEach((item)=> {
+      if(el.selected && el.value ===item.value) {
+        item.selected = true;
+      }
+    });
+  });
+}
+
 typeLodging.addEventListener('input', ()=> {
   priceСhangePlaceholder();
   fieldPrice.value = '';
@@ -128,13 +142,21 @@ fieldPrice.addEventListener('input', ()=> {
   });
 });
 
-fieldRoomNumber.addEventListener('input',() => {
+fieldRoomNumber.addEventListener('input',()=> {
   const fieldCapacitySelecyed = Number(fieldRoomNumber.value);
   disabledAllOptionsRoom();
   const optionsRooms = Array.from(fieldCapacity.options);
   optionsRooms.forEach((el)=> {
     comparCapacity(el, fieldCapacitySelecyed);
   });
+});
+
+selectTimein.addEventListener('input', ()=>{
+  synchronousTime(selectTimeout, selectTimein);
+});
+
+selectTimeout.addEventListener('input', ()=> {
+  synchronousTime(selectTimein, selectTimeout);
 });
 
 export {disabledForm, activateForm, disabledAllOptionsRoom, iniOptionsGroupRoomSelected, priceСhangePlaceholder};
