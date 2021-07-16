@@ -1,6 +1,3 @@
-import {genirationOrders} from './data.js';
-
-const similarCard = genirationOrders(1);
 const cardTemplate = document.querySelector('#card').content.querySelector('.popup');
 function similarCardPhoto(similarCardElement, img) {
   const element = similarCardElement.querySelector('.popup__photos');
@@ -27,7 +24,8 @@ function displayFeatures(modifaer, similarCardElement) {
   });
   featuresContainer.appendChild(fragment);
 }
-similarCard.forEach((el)=> {
+
+function createElement(el) {
   switch (el.offer.type) {
     case 'hotel':
       el.offer.type = 'Отель';
@@ -46,9 +44,6 @@ similarCard.forEach((el)=> {
       break;
     default: 'Пространство';
   }
-});
-const similarFragment = document.createDocumentFragment();
-similarCard.forEach((el)=> {
   const similarCardElement = cardTemplate.cloneNode(true);
   el.offer.title ? similarCardElement.querySelector('.popup__title').textContent = el.offer.title : similarCardElement.querySelector('.popup__title').remove;
   el.offer.address ? similarCardElement.querySelector('.popup__text--address').textContent = el.offer.address :  similarCardElement.querySelector('.popup__text--address').remove;
@@ -60,6 +55,6 @@ similarCard.forEach((el)=> {
   el.author.avatar ? similarCardElement.querySelector('.popup__avatar').src = el.author.avatar : similarCardElement.querySelector('.popup__avatar').remove;
   displayFeatures(el.offer.features, similarCardElement);
   similarCardPhoto(similarCardElement, el.offer.photos);
-  similarFragment.appendChild(similarCardElement);
-});
-export {similarFragment};
+  return similarCardElement;
+}
+export {createElement};
