@@ -1,3 +1,5 @@
+import {sendData} from './api.js';
+import {showAlert} from './util.js';
 const form = document.querySelector('.ad-form');
 const fildsetFormElement = form.querySelectorAll('.ad-form__element');
 const fieldRoomNumber = form.querySelector('#room_number');
@@ -158,5 +160,20 @@ selectTimein.addEventListener('input', ()=>{
 selectTimeout.addEventListener('input', ()=> {
   synchronousTime(selectTimein, selectTimeout);
 });
-
-export {disabledForm, activateForm, disabledAllOptionsRoom, iniOptionsGroupRoomSelected, priceСhangePlaceholder};
+function clearForm() {
+  form.reset();
+  mapFiltersBlock.reset();
+}
+function setUserFormSubmit(startMap) {
+  form.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+    sendData(
+      () => clearForm(),
+      () => startMap(),
+      () => showAlert('Форма удачно отравлена', 'green'),
+      () => showAlert('Не удалось отправить форму. Попробуйте ещё раз', 'red'),
+      new FormData(evt.target),
+    );
+  });
+}
+export {disabledForm, activateForm, disabledAllOptionsRoom, iniOptionsGroupRoomSelected, priceСhangePlaceholder, setUserFormSubmit, clearForm};

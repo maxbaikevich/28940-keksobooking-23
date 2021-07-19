@@ -1,8 +1,8 @@
 const cardTemplate = document.querySelector('#card').content.querySelector('.popup');
 function similarCardPhoto(similarCardElement, img) {
   const element = similarCardElement.querySelector('.popup__photos');
-  if(!img.length) {
-    element.querySelector('.popup__photos').remove;
+  if(img === undefined || !img.length) {
+    element.remove();
     return;
   }
   element.querySelector('img').remove();
@@ -53,7 +53,9 @@ function createElement(el) {
   similarCardElement.querySelector('.popup__text--time').textContent = `Заезд после ${el.offer.checkin} выезд до ${el.offer.checkout}`;
   el.offer.description ? similarCardElement.querySelector('.popup__description').textContent = el.offer.description : similarCardElement.querySelector('.popup__description').remove;
   el.author.avatar ? similarCardElement.querySelector('.popup__avatar').src = el.author.avatar : similarCardElement.querySelector('.popup__avatar').remove;
-  displayFeatures(el.offer.features, similarCardElement);
+  if(el.offer.features) {
+    displayFeatures(el.offer.features, similarCardElement);
+  }
   similarCardPhoto(similarCardElement, el.offer.photos);
   return similarCardElement;
 }
