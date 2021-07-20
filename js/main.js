@@ -15,6 +15,15 @@ const PIN_ICON_ANCHOR = [20, 40];
 const MAP_VIEW_LAT = 35.658581;
 const MAP_VIEW_LNG = 139.745438;
 const MAP_VIEW_SCALE = 10;
+let timeId = null
+let currentFilter = {
+  type: 'any',
+  price: 'any',
+  rooms: 'any',
+  guests: 'any',
+  features: []
+};
+let savedData = []
 disabledForm();
 disabledAllOptionsRoom();
 iniOptionsGroupRoomSelected();
@@ -65,6 +74,7 @@ function startMap(){
 }
 mainPinMarker.addTo(map);
 startMap();
+const markerGroup = L.layerGroup().addTo(map);
 mainPinMarker.on('moveend', (event) => mapAddress.value = `${event.target.getLatLng().lat.toFixed(4)} ${event.target.getLatLng().lng.toFixed(4)}`);
 formReset.addEventListener('click', (evt)=>{
   evt.preventDefault();
@@ -74,21 +84,102 @@ formReset.addEventListener('click', (evt)=>{
 
 getData(
   (adsData)=>{
-    adsData.forEach((el)=>{
-      const {location} = el;
-      const pin = L.marker({
-        lat:location.lat,
-        lng:location.lng,
-      },
-      {
-        draggable: false,
-        icon: pinIcon,
-      });
-      pin
-        .addTo(map)
-        .bindPopup(createElement(el));
-    });
+    savedData = adsData
+    setPoints(adsData)
   },
   () => showAlert('Не удалось получить данные. Попробуйте ещё раз', 'red'),
 );
+function clearMap() {
+  markerGroup.clearLayers();
+}
+function setPoints(data) {
+  clearMap()
+  data.forEach((el)=>{
+    const {location} = el;
+    const pin = L.marker({
+      lat:location.lat,
+      lng:location.lng,
+    },
+    {
+      draggable: false,
+      icon: pinIcon,
+    });
+    pin
+      .addTo(markerGroup)
+      .bindPopup(createElement(el));
+  });
+};
+
+function init() {
+  document.querySelector('#housing-type').addEventListener('input', selectFilter)
+  document.querySelector('#housing-price').addEventListener('input', selectFilter)
+  document.querySelector('#housing-rooms').addEventListener('input', selectFilter)
+  document.querySelector('#housing-guests').addEventListener('input', selectFilter)
+  document.querySelectorAll('.map__checkbox').forEach(el => el.addEventListener('input', selectFilter))
+}
+init()
+function retranslite(flatType) {
+  switch (flatType) {
+    case 'Отель':
+      return 'hotel';
+    case 'Квартира':
+      return 'flat';
+    case 'Бунгало':
+      return 'bungalow';
+    case 'Дом':
+      return 'house';
+    case 'Дворец':
+      return 'palace';
+    default: return 'any';
+  }
+}
+function selectFilter(event) {
+  console.log(timeId)
+  if(timeId) return
+  timeId = true
+  setTimeout(() => {
+    let val = event.target.value
+    let filterType = event.target.id.split('-')[1]
+    let features = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner']
+    if (features.indexOf(val) > -1) {
+      let indexOfFeature = currentFilter.features.indexOf(val)
+      if (indexOfFeature > -1) {
+        currentFilter.features.splice(indexOfFeature, 1)
+      } else {
+        currentFilter.features.push(val)
+      }
+    } else {
+      currentFilter[filterType] = val
+    }
+    let output = savedData
+    if (currentFilter.rooms !== 'any') {
+      output = output.filter(el => el.offer.rooms == +currentFilter.rooms)
+    }
+    if (currentFilter.guests !== 'any') {
+      output = output.filter(el => el.offer.guests == +currentFilter.guests)
+    }
+    if (currentFilter.price !== 'any') {
+      if (currentFilter.price === 'low') {
+        output = output.filter(el => el.offer.price < 10000)
+      } else if (currentFilter.price === 'middle') {
+        output = output.filter(el => (el.offer.price >= 10000 && el.offer.price < 50000))
+      } else if (currentFilter.price === 'high') {
+        output = output.filter(el => el.offer.price >= 50000)
+      }
+    }
+    if (currentFilter.type !== 'any') {
+      output.forEach(el => el.offer.typeEng = retranslite(el.offer.type))
+      output = output.filter(el => el.offer.typeEng === currentFilter.type)
+    }
+    if (currentFilter.features.length) {
+      currentFilter.features.forEach(feature => {
+        output = output.filter(el => (el.offer.features && el.offer.features.indexOf(feature) > -1))
+      })
+    }
+    output = output.slice(0, 10)
+    setPoints(output);
+    timeId = null
+  }, 500)
+}
 setUserFormSubmit(startMap);
+export {setPoints};
