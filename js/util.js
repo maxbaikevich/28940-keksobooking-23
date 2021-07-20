@@ -125,4 +125,22 @@ function showAlert(message, color){
     alertContainer.remove();
   }, ALERT_SHOW_TIME);
 }
-export {getOrder,showAlert};
+function errorAlert() {
+  const errorTemplate = document.querySelector('#error').content.querySelector('.error');
+  const errorElement = errorTemplate.cloneNode(true);
+  const errorBatton = errorElement.querySelector('.error__button');
+  errorBatton.addEventListener('click', (evt) => {
+    evt.preventDefault();
+    window.location.reload();
+  });
+  return errorElement;
+}
+function successAlert() {
+  const successTemplate = document.querySelector('#success').content.querySelector('.success');
+  const successElement = successTemplate.cloneNode(true);
+  document.body.append(successElement);
+  setTimeout(() => {
+    successElement.remove();
+  }, ALERT_SHOW_TIME);
+}
+export {getOrder, showAlert, errorAlert, successAlert};
