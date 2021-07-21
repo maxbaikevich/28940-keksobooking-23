@@ -1,5 +1,5 @@
 import {sendData} from './api.js';
-import {showAlert} from './util.js';
+import {successAlert, errorAlert} from './util.js';
 const form = document.querySelector('.ad-form');
 const fildsetFormElement = form.querySelectorAll('.ad-form__element');
 const fieldRoomNumber = form.querySelector('#room_number');
@@ -170,8 +170,8 @@ function setUserFormSubmit(startMap) {
     sendData(
       () => clearForm(),
       () => startMap(),
-      () => showAlert('Форма удачно отравлена', 'green'),
-      () => showAlert('Не удалось отправить форму. Попробуйте ещё раз', 'red'),
+      () => successAlert(),
+      () => errorAlert(),
       new FormData(evt.target),
     );
   });
