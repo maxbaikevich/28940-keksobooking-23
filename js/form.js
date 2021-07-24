@@ -20,40 +20,40 @@ const MIN_PRICE_NIGHT_BUNGALOW = 0;
 const MIN_PRICE_NIGHT = 'Минимальная цена за ночь';
 let valuePrice = Number(fieldPrice.value);
 
-function toggledAttrebuteDisabled(element) {
+const toggledAttrebuteDisabled = (element) =>{
   if(element.hasAttribute('disabled')) {
     element.removeAttribute('disabled');
   }else {
     element.setAttribute('disabled', 'disabled');
   }
-}
+};
 
-function disabledForm() {
+const disabledForm = () => {
   form.classList.add('ad-form--disabled');
   mapFiltersBlock.classList.add('ad-form--disabled');
   fildsetFormElement.forEach((el) => toggledAttrebuteDisabled(el));
   mapFilterElement.forEach((el) => toggledAttrebuteDisabled(el));
   toggledAttrebuteDisabled(fieldsetHeader);
   toggledAttrebuteDisabled(mapFeatures);
-}
+};
 
-function activateForm() {
+const activateForm = () => {
   form.classList.remove('ad-form--disabled');
   mapFiltersBlock.classList.remove('ad-form--disabled');
   fildsetFormElement.forEach((el) => toggledAttrebuteDisabled(el));
   mapFilterElement.forEach((el) => toggledAttrebuteDisabled(el));
   toggledAttrebuteDisabled(fieldsetHeader);
   toggledAttrebuteDisabled(mapFeatures);
-}
+};
 
-function disabledAllOptionsRoom() {
+const disabledAllOptionsRoom = () => {
   const optionsRooms = Array.from(fieldCapacity.options);
   optionsRooms.forEach((el)=> {
     el.disabled = true;
   });
-}
+};
 
-function vlidityFieldPrice(el) {
+const vlidityFieldPrice = (el) => {
   let selectedLodging = {};
   if(el.selected === true) {
     selectedLodging = el;
@@ -71,9 +71,9 @@ function vlidityFieldPrice(el) {
       fieldPrice.setCustomValidity('');
     }
   }
-}
+};
 
-function priceСhangePlaceholder() {
+const priceChangePlaceholder = () => {
   const typeLodgingOptions = Array.from(typeLodging.options);
   typeLodgingOptions.forEach((el)=> {
     if( el.selected && el.value === 'flat') {
@@ -88,9 +88,9 @@ function priceСhangePlaceholder() {
       fieldPrice.placeholder = MIN_PRICE_NIGHT_BUNGALOW;
     }
   });
-}
+};
 
-function comparCapacity(el, option) {
+const comparCapacity = (el, option) => {
   if(option === 100 && Number(el.value) === 0) {
     el.disabled = false;
     el.selected = true;
@@ -104,9 +104,9 @@ function comparCapacity(el, option) {
     el.disabled = false;
     el.selected = true;
   }
-}
+};
 
-function iniOptionsGroupRoomSelected() {
+const iniOptionsGroupRoomSelected = () => {
   const roomArr = Array.from(fieldRoomNumber.options);
   const capacityArr = Array.from(fieldCapacity.options);
   roomArr.forEach((el)=> {
@@ -117,9 +117,9 @@ function iniOptionsGroupRoomSelected() {
       }
     });
   });
-}
+};
 
-function synchronousTime(verifiable, emit) {
+const synchronousTime = (verifiable, emit) => {
   const optVerifiable = Array.from(verifiable.options);
   const optEmit =  Array.from(emit.options);
   optEmit.forEach((el)=> {
@@ -129,10 +129,10 @@ function synchronousTime(verifiable, emit) {
       }
     });
   });
-}
+};
 
 typeLodging.addEventListener('input', ()=> {
-  priceСhangePlaceholder();
+  priceChangePlaceholder();
   fieldPrice.value = '';
 });
 
@@ -160,11 +160,11 @@ selectTimein.addEventListener('input', ()=>{
 selectTimeout.addEventListener('input', ()=> {
   synchronousTime(selectTimein, selectTimeout);
 });
-function clearForm() {
+const clearForm = () => {
   form.reset();
   mapFiltersBlock.reset();
-}
-function setUserFormSubmit(startMap) {
+};
+const setUserFormSubmit = (startMap) => {
   form.addEventListener('submit', (evt) => {
     evt.preventDefault();
     sendData(
@@ -175,5 +175,5 @@ function setUserFormSubmit(startMap) {
       new FormData(evt.target),
     );
   });
-}
-export {disabledForm, activateForm, disabledAllOptionsRoom, iniOptionsGroupRoomSelected, priceСhangePlaceholder, setUserFormSubmit, clearForm};
+};
+export {disabledForm, activateForm, disabledAllOptionsRoom, iniOptionsGroupRoomSelected, priceChangePlaceholder, setUserFormSubmit, clearForm};

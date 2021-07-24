@@ -1,5 +1,5 @@
 const cardTemplate = document.querySelector('#card').content.querySelector('.popup');
-function similarCardPhoto(similarCardElement, img) {
+const similarCardPhoto = (similarCardElement, img) =>{
   const element = similarCardElement.querySelector('.popup__photos');
   if(img === undefined || !img.length) {
     element.remove();
@@ -10,8 +10,8 @@ function similarCardPhoto(similarCardElement, img) {
     const photoList = `<img src="${photos}" class="popup__photo" width="45" height="40" alt="Фотография жилья"></img>`;
     element.innerHTML += photoList;
   });
-}
-function displayFeatures(modifaer, similarCardElement) {
+};
+const displayFeatures = (modifaer, similarCardElement) => {
   const featuresContainer = similarCardElement.querySelector('.popup__features');
   const modifaers = modifaer.map((features)=> `popup__feature--${features}`);
   const featuresElements = similarCardElement.querySelectorAll('.popup__feature');
@@ -23,9 +23,9 @@ function displayFeatures(modifaer, similarCardElement) {
     fragment.appendChild(featureElement);
   });
   featuresContainer.appendChild(fragment);
-}
+};
 
-function createElement(el) {
+const createElement = (el)  =>{
   switch (el.offer.type) {
     case 'hotel':
       el.offer.type = 'Отель';
@@ -58,5 +58,5 @@ function createElement(el) {
   }
   similarCardPhoto(similarCardElement, el.offer.photos);
   return similarCardElement;
-}
+};
 export {createElement};
